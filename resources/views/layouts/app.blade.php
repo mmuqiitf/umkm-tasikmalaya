@@ -26,6 +26,16 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.7/dist/sweetalert2.all.min.js"
         integrity="sha256-2UHqQuWxFUpPFIsooOziz5fIn6wCyDgf3c9SthP8ZYk=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        window.hereApiKey = "{{ env('HERE_API_KEY') }}"
+    </script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 </head>
 
@@ -48,6 +58,7 @@
 
 
     @stack('scripts')
+    <script src="{{ asset('js/here.js') }}"></script>
 </body>
 
 </html>

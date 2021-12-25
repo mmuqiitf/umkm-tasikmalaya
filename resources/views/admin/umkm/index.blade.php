@@ -6,7 +6,7 @@
     @endif
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Kecamatan') }}
+            {{ __('UMKM') }}
         </h2>
     </x-slot>
 
@@ -16,23 +16,24 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex justify-between">
                         <div>
-                            <h1 class="text-2xl pb-3">List Kecamatan</h1>
+                            <h1 class="text-2xl pb-3">List UMKM</h1>
                         </div>
                         <div>
-                            <x-buttons href="{{ route('admin.kecamatan.create') }}"
+                            <x-buttons href="{{ route('admin.umkm.create') }}"
                                 class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500">
                                 Tambah</x-buttons>
                         </div>
                     </div>
-                    <table id="kecamatan-table" class="stripe hover"
+                    <table id="umkm-table" class="stripe hover"
                         style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
                         <thead>
                             <tr>
                                 <th>Nomor</th>
                                 <th>Nama</th>
-                                <th>Jumlah UMKM</th>
-                                <th>Status</th>
-                                <th>Dibuat</th>
+                                <th>Jenis UMKM</th>
+                                <th>Alamat</th>
+                                <th>Kecamatan</th>
+                                <th>Pemilik</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -58,13 +59,13 @@
                     })
                 }
             });
-            let table = $('#kecamatan-table').DataTable({
+            let table = $('#umkm-table').DataTable({
                     responsive: true,
                     fixedHeader: true,
                     pageLength: 25,
                     processing: true,
                     serverSide: true,
-                    ajax: "{{ route('admin.kecamatan.list') }}",
+                    ajax: "{{ route('admin.umkm.list') }}",
                     columns: [{
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex'
@@ -74,16 +75,20 @@
                             name: 'name'
                         },
                         {
-                            data: 'umkm',
-                            name: 'umkm'
+                            data: 'jenis_umkm',
+                            name: 'jenis_umkm'
                         },
                         {
-                            data: 'status',
-                            name: 'status'
+                            data: 'address',
+                            name: 'address'
                         },
                         {
-                            data: 'created_at',
-                            name: 'created_at'
+                            data: 'kecamatan',
+                            name: 'kecamatan'
+                        },
+                        {
+                            data: 'user',
+                            name: 'user'
                         },
                         {
                             data: 'action',
@@ -101,13 +106,13 @@
             }
 
 
-            $('#kecamatan-table').on('click', '.hapus_record', function(e) {
+            $('#umkm-table').on('click', '.hapus_record', function(e) {
                 let id = $(this).data('id')
                 let name = $(this).data('name')
                 e.preventDefault()
                 Swal.fire({
                     title: 'Apakah Yakin?',
-                    text: `Apakah Anda yakin ingin menghapus kecamatan dengan nama : ${name}`,
+                    text: `Apakah Anda yakin ingin menghapus umkm dengan nama : ${name}`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -117,7 +122,7 @@
                     if (result.isConfirmed) {
                         let CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
-                            url: "{{ url('admin/kecamatan/') }}/" + id,
+                            url: "{{ url('admin/umkm/') }}/" + id,
                             type: 'POST',
                             data: {
                                 _token: CSRF_TOKEN,
@@ -134,7 +139,7 @@
                                 } else {
                                     Swal.fire(
                                         'Deleted!',
-                                        `Kecamatan dengan nama : ${name} berhasil terhapus.`,
+                                        `UMKM dengan nama : ${name} berhasil terhapus.`,
                                         'success'
                                     )
                                 }

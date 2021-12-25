@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                                     <x-buttons type="submit"
-                                        class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500">
+                                        class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500">
                                         Tambah</x-buttons>
                                 </div>
                             </div>

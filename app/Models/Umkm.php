@@ -26,4 +26,22 @@ class Umkm extends Model
     {
         return $this->belongsTo(JenisUmkm::class);
     }
+
+    public function getUmkm($latitude, $longitude, $radius)
+    {
+        return $this->select('umkm.*')
+            ->selectRaw(
+                '( 6371 *
+                    acos( cos( radians(?) ) *
+                        cos( radians( latitude ) ) *
+                        cos( radians(longitude ) - radians(?)) +
+                        sin( radians(?) ) *
+                        sin( radians( latitude ) )
+                    )
+                ) AS distance',
+                [$latitude, $longitude, $latitude]
+            )
+            ->havingRaw("distance < ?", [$radius])
+            ->orderBy('distance', 'asc');
+    }
 }

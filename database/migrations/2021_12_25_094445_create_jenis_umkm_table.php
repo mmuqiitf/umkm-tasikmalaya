@@ -15,7 +15,7 @@ class CreateJenisUmkmTable extends Migration
     {
         Schema::create('jenis_umkm', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
+            $table->string('name');
             $table->tinyInteger('status');
             $table->timestamps();
         });
