@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\KecamatanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +18,15 @@ Route::get('/', function () {
     return view('layouts.test');
 })->name('homepage');
 
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+
+    Route::get('/kecamatan/list', [KecamatanController::class, 'list'])->name('kecamatan.list');
+    Route::resource('kecamatan', KecamatanController::class);
+});
 
 require __DIR__ . '/auth.php';
