@@ -9,6 +9,7 @@ use App\Models\Umkm;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\File;
 
 class UmkmController extends Controller
 {
@@ -70,7 +71,6 @@ class UmkmController extends Controller
         $kecamatans = Kecamatan::where('status', 1)->latest()->get();
         $users = User::latest()->get();
         $jenisUmkms = JenisUmkm::where('status', 1)->latest()->get();
-
         return view('admin.umkm.create', compact('kecamatans', 'users', 'jenisUmkms'));
     }
 
@@ -82,7 +82,39 @@ class UmkmController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'description' => 'required',
+            'address' => 'required',
+            'kecamatan_id' => 'required|numeric',
+            'user_id' => 'required|numeric',
+            'jenis_umkm_id' => 'required|numeric',
+            'lat' => 'required',
+            'lng' => 'required',
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+        ]);
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photo_name = $photo->getClientOriginalName();
+            $photo_name = preg_replace('!\s+!', ' ', $photo_name);
+            $photo_name = str_replace(' ', '_', $photo_name);
+            $photo_name = str_replace('%', '', $photo_name);
+            $photo->move(public_path('photo'), $photo_name);
+            Umkm::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'address' => $request->address,
+                'kecamatan_id' => $request->kecamatan_id,
+                'user_id' => $request->user_id,
+                'jenis_umkm_id' => $request->jenis_umkm_id,
+                'latitude' => $request->lat,
+                'longitude' => $request->lng,
+                'photo' => $photo_name,
+            ]);
+            return redirect()->route('admin.umkm.index')->with('success', 'UMKM baru berhasil dibuat!');
+        } else {
+            return redirect()->route('admin.umkm.index')->with('success', 'Upload Foto terlebih dahulu!');
+        }
     }
 
     /**
@@ -102,9 +134,12 @@ class UmkmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Umkm $umkm)
     {
-        //
+        $kecamatans = Kecamatan::where('status', 1)->latest()->get();
+        $users = User::latest()->get();
+        $jenisUmkms = JenisUmkm::where('status', 1)->latest()->get();
+        return view('admin.umkm.edit', compact('kecamatans', 'users', 'jenisUmkms', 'umkm'));
     }
 
     /**
@@ -114,9 +149,40 @@ class UmkmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Umkm $umkm)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'description' => 'required',
+            'address' => 'required',
+            'kecamatan_id' => 'required|numeric',
+            'user_id' => 'required|numeric',
+            'jenis_umkm_id' => 'required|numeric',
+            'lat' => 'required',
+            'lng' => 'required',
+            'photo' => 'sometimes|required|image|mimes:jpeg,png,jpg|max:5120',
+        ]);
+        $photo_name = $umkm->photo;
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photo_name = $photo->getClientOriginalName();
+            $photo_name = preg_replace('!\s+!', ' ', $photo_name);
+            $photo_name = str_replace(' ', '_', $photo_name);
+            $photo_name = str_replace('%', '', $photo_name);
+            $photo->move(public_path('photo'), $photo_name);
+        }
+        $umkm->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'address' => $request->address,
+            'kecamatan_id' => $request->kecamatan_id,
+            'user_id' => $request->user_id,
+            'jenis_umkm_id' => $request->jenis_umkm_id,
+            'latitude' => $request->lat,
+            'longitude' => $request->lng,
+            'photo' => $photo_name,
+        ]);
+        return redirect()->route('admin.umkm.index')->with('success', 'UMKM berhasil diubah!');
     }
 
     /**
@@ -125,8 +191,13 @@ class UmkmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Umkm $umkm)
     {
-        //
+        $path_file = public_path('photo/' . $umkm->photo);
+        if (File::exists($path_file)) {
+            unlink($path_file);
+        }
+        $umkm->delete();
+        return response()->json(['status' => TRUE]);
     }
 }
