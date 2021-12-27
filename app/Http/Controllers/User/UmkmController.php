@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\JenisUmkm;
@@ -20,13 +20,13 @@ class UmkmController extends Controller
      */
     public function index()
     {
-        return view('admin.umkm.index');
+        return view('user.umkm.index');
     }
 
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $data = Umkm::with(['user', 'kecamatan', 'jenis_umkm'])->latest()->get();
+            $data = Umkm::with(['user', 'kecamatan', 'jenis_umkm'])->where('user_id', auth()->user()->id)->latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('created_at', function ($row) {
@@ -42,8 +42,8 @@ class UmkmController extends Controller
                     return $row->kecamatan->name;
                 })
                 ->addColumn('action', function ($row) {
-                    $edit_url = route('admin.umkm.edit', $row->id);
-                    $edit_url = route('admin.umkm.show', $row->id);
+                    $edit_url = route('user.umkm.edit', $row->id);
+                    $edit_url = route('user.umkm.show', $row->id);
                     $action_btn = '
                     <button
                         class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest focus:outline-non disabled:opacity-25 transition ease-in-out duration-150 text-white bg-gray-800 hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 lihat" data-id="' . $row->id . '" data-latitude="' . $row->latitude . '" data-longitude="' . $row->longitude . '">
@@ -74,9 +74,8 @@ class UmkmController extends Controller
     public function create()
     {
         $kecamatans = Kecamatan::where('status', 1)->latest()->get();
-        $users = User::latest()->get();
         $jenisUmkms = JenisUmkm::where('status', 1)->latest()->get();
-        return view('admin.umkm.create', compact('kecamatans', 'users', 'jenisUmkms'));
+        return view('user.umkm.create', compact('kecamatans', 'jenisUmkms'));
     }
 
     /**
@@ -92,7 +91,6 @@ class UmkmController extends Controller
             'description' => 'required',
             'address' => 'required',
             'kecamatan_id' => 'required|numeric',
-            'user_id' => 'required|numeric',
             'jenis_umkm_id' => 'required|numeric',
             'lat' => 'required',
             'lng' => 'required',
@@ -110,15 +108,15 @@ class UmkmController extends Controller
                 'description' => $request->description,
                 'address' => $request->address,
                 'kecamatan_id' => $request->kecamatan_id,
-                'user_id' => $request->user_id,
+                'user_id' => auth()->user()->id,
                 'jenis_umkm_id' => $request->jenis_umkm_id,
                 'latitude' => $request->lat,
                 'longitude' => $request->lng,
                 'photo' => $photo_name,
             ]);
-            return redirect()->route('admin.umkm.index')->with('success', 'UMKM baru berhasil dibuat!');
+            return redirect()->route('user.umkm.index')->with('success', 'UMKM baru berhasil dibuat!');
         } else {
-            return redirect()->route('admin.umkm.index')->with('success', 'Upload Foto terlebih dahulu!');
+            return redirect()->route('user.umkm.index')->with('success', 'Upload Foto terlebih dahulu!');
         }
     }
 
@@ -131,7 +129,7 @@ class UmkmController extends Controller
     public function show(Request $request, $id)
     {
         $umkm = Umkm::findOrfail($id);
-        return view('admin.umkm.show', compact('umkm'));
+        return view('user.umkm.show', compact('umkm'));
     }
 
     /**
@@ -143,9 +141,8 @@ class UmkmController extends Controller
     public function edit(Umkm $umkm)
     {
         $kecamatans = Kecamatan::where('status', 1)->latest()->get();
-        $users = User::latest()->get();
         $jenisUmkms = JenisUmkm::where('status', 1)->latest()->get();
-        return view('admin.umkm.edit', compact('kecamatans', 'users', 'jenisUmkms', 'umkm'));
+        return view('user.umkm.edit', compact('kecamatans', 'jenisUmkms', 'umkm'));
     }
 
     /**
@@ -162,7 +159,6 @@ class UmkmController extends Controller
             'description' => 'required',
             'address' => 'required',
             'kecamatan_id' => 'required|numeric',
-            'user_id' => 'required|numeric',
             'jenis_umkm_id' => 'required|numeric',
             'lat' => 'required',
             'lng' => 'required',
@@ -182,13 +178,13 @@ class UmkmController extends Controller
             'description' => $request->description,
             'address' => $request->address,
             'kecamatan_id' => $request->kecamatan_id,
-            'user_id' => $request->user_id,
+            'user_id' => auth()->user()->id,
             'jenis_umkm_id' => $request->jenis_umkm_id,
             'latitude' => $request->lat,
             'longitude' => $request->lng,
             'photo' => $photo_name,
         ]);
-        return redirect()->route('admin.umkm.index')->with('success', 'UMKM berhasil diubah!');
+        return redirect()->route('user.umkm.index')->with('success', 'UMKM berhasil diubah!');
     }
 
     /**

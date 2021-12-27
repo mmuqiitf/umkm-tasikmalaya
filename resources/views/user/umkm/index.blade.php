@@ -19,7 +19,7 @@
                             <h1 class="text-2xl pb-3">List UMKM</h1>
                         </div>
                         <div>
-                            <x-buttons href="{{ route('admin.umkm.create') }}"
+                            <x-buttons href="{{ route('user.umkm.create') }}"
                                 class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500">
                                 Tambah</x-buttons>
                         </div>
@@ -33,7 +33,6 @@
                                 <th>Jenis UMKM</th>
                                 <th>Alamat</th>
                                 <th>Kecamatan</th>
-                                <th>Pemilik</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -65,7 +64,7 @@
                     pageLength: 25,
                     processing: true,
                     serverSide: true,
-                    ajax: "{{ route('admin.umkm.list') }}",
+                    ajax: "{{ route('user.umkm.list') }}",
                     columns: [{
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex'
@@ -85,10 +84,6 @@
                         {
                             data: 'kecamatan',
                             name: 'kecamatan'
-                        },
-                        {
-                            data: 'user',
-                            name: 'user'
                         },
                         {
                             data: 'action',
@@ -122,7 +117,7 @@
                     if (result.isConfirmed) {
                         let CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
-                            url: "{{ url('admin/umkm/') }}/" + id,
+                            url: "{{ url('user/umkm/') }}/" + id,
                             type: 'POST',
                             data: {
                                 _token: CSRF_TOKEN,
@@ -162,7 +157,7 @@
                 let id = $(this).data('id')
                 let latitude = $(this).data('latitude')
                 let longitude = $(this).data('longitude')
-                openDirection(latitude, longitude, id, "admin")
+                openDirection(latitude, longitude, id, "user")
             })
         </script>
     @endpush

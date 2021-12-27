@@ -35,6 +35,7 @@
     <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
     <script>
         window.hereApiKey = "{{ env('HERE_API_KEY') }}"
+        window.baseurl = "{{ url('') }}"
     </script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 </head>

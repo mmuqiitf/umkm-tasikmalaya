@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\JenisUmkmController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\UmkmController;
+use App\Http\Controllers\User\UmkmController as UserUmkmController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('layouts.test');
+    return view('welcome');
 })->name('homepage');
 
 
@@ -34,6 +35,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     Route::get('/umkm/list', [UmkmController::class, 'list'])->name('umkm.list');
     Route::resource('umkm', UmkmController::class);
+});
+
+Route::prefix('user')->name('user.')->middleware(['auth'])->group(function () {
+    Route::get('/umkm/list', [UserUmkmController::class, 'list'])->name('umkm.list');
+    Route::resource('umkm', UserUmkmController::class);
 });
 
 require __DIR__ . '/auth.php';

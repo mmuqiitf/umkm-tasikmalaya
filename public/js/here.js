@@ -305,10 +305,9 @@ if (navigator.geolocation) {
 
 
     })
-
     // Open url direction
-    function openDirection(lat, lng, id) {
-        window.open(`/umkm/${id}?from=${objLocalCoord.lat},${objLocalCoord.lng}&to=${lat},${lng}`, "_self");
+    function openDirection(lat, lng, id, role) {
+        window.open(`${window.baseurl}/${role}/umkm/${id}?from=${objLocalCoord.lat},${objLocalCoord.lng}&to=${lat},${lng}`, "_blank");
     }
 } else {
     console.error("Geolocation is not suppported by this browser!");
