@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\JenisUmkmController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\UmkmController;
 use App\Http\Controllers\User\UmkmController as UserUmkmController;
+use App\Models\Kecamatan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +19,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $kecamatans = Kecamatan::where('status', 1)->get();
+    return view('layouts.test', compact('kecamatans'));
 })->name('homepage');
 
 

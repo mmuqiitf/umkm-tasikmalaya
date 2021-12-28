@@ -27,21 +27,45 @@ class Umkm extends Model
         return $this->belongsTo(JenisUmkm::class);
     }
 
-    public function getUmkm($latitude, $longitude, $radius)
+    public function getUmkm($latitude, $longitude, $radius, $kecamatan = false)
     {
-        return $this->select('umkm.*')
-            ->selectRaw(
-                '( 6371 *
-                    acos( cos( radians(?) ) *
-                        cos( radians( latitude ) ) *
-                        cos( radians(longitude ) - radians(?)) +
-                        sin( radians(?) ) *
-                        sin( radians( latitude ) )
-                    )
-                ) AS distance',
-                [$latitude, $longitude, $latitude]
-            )
-            ->havingRaw("distance < ?", [$radius])
-            ->orderBy('distance', 'asc');
+        if (!$kecamatan) {
+            return $this->select('umkm.*', 'users.name as user_name', 'jenis_umkm.name as jenis_umkm_name', 'kecamatan.name as kecamatan_name')
+                ->selectRaw(
+                    '( 6371 *
+                        acos( cos( radians(?) ) *
+                            cos( radians( latitude ) ) *
+                            cos( radians(longitude ) - radians(?)) +
+                            sin( radians(?) ) *
+                            sin( radians( latitude ) )
+                        )
+                    ) AS distance',
+                    [$latitude, $longitude, $latitude]
+                )
+                ->join('kecamatan', 'kecamatan.id', '=', 'umkm.kecamatan_id')
+                ->join('users', 'users.id', '=', 'umkm.user_id')
+                ->join('jenis_umkm', 'jenis_umkm.id', '=', 'umkm.jenis_umkm_id')
+                ->havingRaw("distance < ?", [$radius])
+                ->orderBy('distance', 'asc');
+        } else {
+            return $this->select('umkm.*', 'users.name as user_name', 'jenis_umkm.name as jenis_umkm_name', 'kecamatan.name as kecamatan_name')
+                ->selectRaw(
+                    '( 6371 *
+                        acos( cos( radians(?) ) *
+                            cos( radians( latitude ) ) *
+                            cos( radians(longitude ) - radians(?)) +
+                            sin( radians(?) ) *
+                            sin( radians( latitude ) )
+                        )
+                    ) AS distance',
+                    [$latitude, $longitude, $latitude]
+                )
+                ->join('kecamatan', 'kecamatan.id', '=', 'umkm.kecamatan_id')
+                ->join('users', 'users.id', '=', 'umkm.user_id')
+                ->join('jenis_umkm', 'jenis_umkm.id', '=', 'umkm.jenis_umkm_id')
+                ->whereRaw("kecamatan_id = ?", [$kecamatan])
+                ->havingRaw("distance < ?", [$radius])
+                ->orderBy('distance', 'asc');
+        }
     }
 }

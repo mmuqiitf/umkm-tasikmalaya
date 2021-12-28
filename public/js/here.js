@@ -121,35 +121,152 @@ if (navigator.geolocation) {
 
         // Browse location codespace
         let umkm = [];
-        const fetchSpaces = function (latitude, longitude, radius) {
-            return new Promise(function (resolve, reject) {
-                resolve(
-                    fetch(`/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}`)
-                    .then((res) => res.json())
-                    .then(function (data) {
-                        data.forEach(function (value, index) {
-                            let marker = new H.map.Marker({
-                                lat: value.latitude,
-                                lng: value.longitude
-                            });
-                            marker.addEventListener('tap', function(event){
-                                var bubble = new H.ui.InfoBubble({
+        const fetchSpaces = function (latitude, longitude, radius, kecamatan = false) {
+            if (!kecamatan) {
+                return new Promise(function (resolve, reject) {
+                    resolve(
+                        fetch(`/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}`)
+                        .then((res) => res.json())
+                        .then(function (data) {
+                            console.log("DATA", data)
+                            data.forEach(function (value, index) {
+                                let marker = new H.map.Marker({
                                     lat: value.latitude,
                                     lng: value.longitude
-                                }, {
-                                    content: '<div><a href="">'+ value.title +' </a></div>' +
-                                    '<div style="font-size:12px">'+ value.description +'<br />Jarak: '+ (Math.round((value.distance + Number.EPSILON) * 100) / 100) +' KM</div>'
                                 });
-                                // Add info bubble to the UI:
-                                ui.addBubble(bubble);
+                                if(window.action == "browse"){
+                                    marker.addEventListener('tap', function (event) {
+                                        toggleModal()
+                                        
+                                        document.getElementById("name").value = value.name
+                                        document.getElementById("address").value = value.address
+                                        document.getElementById("description").value = value.description
+                                        document.getElementById("kecamatan_name").value = value.kecamatan_name
+                                        document.getElementById("jenis_umkm").value = value.jenis_umkm_name
+                                        document.getElementById("pemilik").value = value.user_name
+                                        // document.getElementById("photo").value = value.
+                                        document.getElementById("photo").src = `${window.baseurl}/photo/${value.photo}`
+                                        document.getElementById("lat").value = value.latitude
+                                        document.getElementById("lng").value = value.longitude
+
+                                        const overlay = document.querySelector('.modal-overlay')
+                                        overlay.addEventListener('click', toggleModal)
+    
+                                        var closemodal = document.querySelectorAll('.modal-close')
+                                        for (var i = 0; i < closemodal.length; i++) {
+                                            closemodal[i].addEventListener('click', toggleModal)
+                                          }
+    
+                                        document.onkeydown = function (evt) {
+                                            evt = evt || window.event
+                                            var isEscape = false
+                                            if ("key" in evt) {
+                                                isEscape = (evt.key === "Escape" || evt.key === "Esc")
+                                            } else {
+                                                isEscape = (evt.keyCode === 27)
+                                            }
+                                            if (isEscape && document.body.classList.contains('modal-active')) {
+                                                toggleModal()
+                                            }
+                                        };
+    
+                                        function toggleModal() {
+                                            const body = document.querySelector('body')
+                                            const modal = document.querySelector('.modal')
+                                            modal.classList.toggle('opacity-0')
+                                            modal.classList.toggle('pointer-events-none')
+                                            body.classList.toggle('modal-active')
+                                        }
+                                        // toggleModal('modal-id')
+                                        // var bubble = new H.ui.InfoBubble({
+                                        //     lat: value.latitude,
+                                        //     lng: value.longitude
+                                        // }, {
+                                        //     content: '<div><a href="">' + value.name + ' </a></div>' +
+                                        //         '<div style="font-size:12px">' + value.description + '<br />Jarak: ' + (Math.round((value.distance + Number.EPSILON) * 100) / 100) + ' KM</div>'
+                                        // });
+                                        // // Add info bubble to the UI:
+                                        // ui.addBubble(bubble);
+                                    })
+                                }
+                                umkm.push(marker);
                             })
-                            
-                            
-                            umkm.push(marker);
                         })
-                    })
-                )
-            })
+                    )
+                })
+            } else {
+                return new Promise(function (resolve, reject) {
+                    resolve(
+                        fetch(`/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}&kecamatan=${kecamatan}`)
+                        .then((res) => res.json())
+                        .then(function (data) {
+                            data.forEach(function (value, index) {
+                                let marker = new H.map.Marker({
+                                    lat: value.latitude,
+                                    lng: value.longitude
+                                });
+                                if(window.action == "browse"){
+                                    marker.addEventListener('tap', function (event) {
+                                        toggleModal()
+                                        
+                                        document.getElementById("name").value = value.name
+                                        document.getElementById("address").value = value.address
+                                        document.getElementById("description").value = value.description
+                                        document.getElementById("kecamatan_name").value = value.kecamatan_name
+                                        document.getElementById("jenis_umkm").value = value.jenis_umkm_name
+                                        document.getElementById("pemilik").value = value.user_name
+                                        // document.getElementById("photo").value = value.
+                                        document.getElementById("photo").src = `${window.baseurl}/photo/${value.photo}`
+                                        document.getElementById("lat").value = value.latitude
+                                        document.getElementById("lng").value = value.longitude
+
+                                        const overlay = document.querySelector('.modal-overlay')
+                                        overlay.addEventListener('click', toggleModal)
+    
+                                        var closemodal = document.querySelectorAll('.modal-close')
+                                        for (var i = 0; i < closemodal.length; i++) {
+                                            closemodal[i].addEventListener('click', toggleModal)
+                                          }
+    
+                                        document.onkeydown = function (evt) {
+                                            evt = evt || window.event
+                                            var isEscape = false
+                                            if ("key" in evt) {
+                                                isEscape = (evt.key === "Escape" || evt.key === "Esc")
+                                            } else {
+                                                isEscape = (evt.keyCode === 27)
+                                            }
+                                            if (isEscape && document.body.classList.contains('modal-active')) {
+                                                toggleModal()
+                                            }
+                                        };
+    
+                                        function toggleModal() {
+                                            const body = document.querySelector('body')
+                                            const modal = document.querySelector('.modal')
+                                            modal.classList.toggle('opacity-0')
+                                            modal.classList.toggle('pointer-events-none')
+                                            body.classList.toggle('modal-active')
+                                        }
+                                        // toggleModal('modal-id')
+                                        // var bubble = new H.ui.InfoBubble({
+                                        //     lat: value.latitude,
+                                        //     lng: value.longitude
+                                        // }, {
+                                        //     content: '<div><a href="">' + value.name + ' </a></div>' +
+                                        //         '<div style="font-size:12px">' + value.description + '<br />Jarak: ' + (Math.round((value.distance + Number.EPSILON) * 100) / 100) + ' KM</div>'
+                                        // });
+                                        // // Add info bubble to the UI:
+                                        // ui.addBubble(bubble);
+                                    })
+                                }
+                                umkm.push(marker);
+                            })
+                        })
+                    )
+                })
+            }
+
         }
 
         function clearSpace() {
@@ -157,15 +274,21 @@ if (navigator.geolocation) {
             umkm = [];
         }
 
-        function init(latitude, longitude, radius) {
+        function init(latitude, longitude, radius, kecamatan = false) {
             clearSpace();
-            fetchSpaces(latitude, longitude, radius)
+            fetchSpaces(latitude, longitude, radius, kecamatan)
                 .then(function () {
                     map.addObjects(umkm);
                 });
         }
 
         if (window.action == 'browse') {
+            let kecamatan = document.getElementById("kecamatan")
+            kecamatan.addEventListener('change', (e) => {
+                e.preventDefault()
+                var values = e.target.value
+                init(objLocalCoord.lat, objLocalCoord.lng, 40, values);
+            })
             map.addEventListener('dragend', function (ev) {
                 let resultCoord = map.screenToGeo(
                     ev.currentPointer.viewportX,
