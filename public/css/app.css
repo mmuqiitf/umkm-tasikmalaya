@@ -792,6 +792,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.bg-black {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}.bg-gray-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(75 85 99 / var(--tw-bg-opacity));
 }.bg-clip-padding {
   background-clip: padding-box;
 }.fill-current {
@@ -1275,6 +1278,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
 }.focus\:ring-white:focus {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(255 255 255 / var(--tw-ring-opacity));
+}.focus\:ring-gray-500:focus {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(107 114 128 / var(--tw-ring-opacity));
 }.focus\:ring-opacity-50:focus {
   --tw-ring-opacity: 0.5;
 }.focus\:ring-offset-2:focus {

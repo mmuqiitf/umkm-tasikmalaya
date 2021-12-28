@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $kecamatans = Kecamatan::where('status', 1)->get();
-    return view('layouts.test', compact('kecamatans'));
+    return view('layouts.front', compact('kecamatans'));
 })->name('homepage');
 
 
