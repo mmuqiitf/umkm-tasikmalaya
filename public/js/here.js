@@ -121,151 +121,92 @@ if (navigator.geolocation) {
 
         // Browse location codespace
         let umkm = [];
+        let urlFetchUMKM = '';
         const fetchSpaces = function (latitude, longitude, radius, kecamatan = false) {
-            if (!kecamatan) {
-                return new Promise(function (resolve, reject) {
-                    resolve(
-                        fetch(`/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}`)
-                        .then((res) => res.json())
-                        .then(function (data) {
-                            console.log("DATA", data)
-                            data.forEach(function (value, index) {
-                                let marker = new H.map.Marker({
-                                    lat: value.latitude,
-                                    lng: value.longitude
-                                });
-                                if(window.action == "browse"){
-                                    marker.addEventListener('tap', function (event) {
-                                        toggleModal()
-                                        
-                                        document.getElementById("name").value = value.name
-                                        document.getElementById("address").value = value.address
-                                        document.getElementById("description").value = value.description
-                                        document.getElementById("kecamatan_name").value = value.kecamatan_name
-                                        document.getElementById("jenis_umkm").value = value.jenis_umkm_name
-                                        document.getElementById("pemilik").value = value.user_name
-                                        // document.getElementById("photo").value = value.
-                                        document.getElementById("photo").src = `${window.baseurl}/photo/${value.photo}`
-                                        document.getElementById("lat").value = value.latitude
-                                        document.getElementById("lng").value = value.longitude
-
-                                        const overlay = document.querySelector('.modal-overlay')
-                                        overlay.addEventListener('click', toggleModal)
-    
-                                        var closemodal = document.querySelectorAll('.modal-close')
-                                        for (var i = 0; i < closemodal.length; i++) {
-                                            closemodal[i].addEventListener('click', toggleModal)
-                                          }
-    
-                                        document.onkeydown = function (evt) {
-                                            evt = evt || window.event
-                                            var isEscape = false
-                                            if ("key" in evt) {
-                                                isEscape = (evt.key === "Escape" || evt.key === "Esc")
-                                            } else {
-                                                isEscape = (evt.keyCode === 27)
-                                            }
-                                            if (isEscape && document.body.classList.contains('modal-active')) {
-                                                toggleModal()
-                                            }
-                                        };
-    
-                                        function toggleModal() {
-                                            const body = document.querySelector('body')
-                                            const modal = document.querySelector('.modal')
-                                            modal.classList.toggle('opacity-0')
-                                            modal.classList.toggle('pointer-events-none')
-                                            body.classList.toggle('modal-active')
-                                        }
-                                        // toggleModal('modal-id')
-                                        // var bubble = new H.ui.InfoBubble({
-                                        //     lat: value.latitude,
-                                        //     lng: value.longitude
-                                        // }, {
-                                        //     content: '<div><a href="">' + value.name + ' </a></div>' +
-                                        //         '<div style="font-size:12px">' + value.description + '<br />Jarak: ' + (Math.round((value.distance + Number.EPSILON) * 100) / 100) + ' KM</div>'
-                                        // });
-                                        // // Add info bubble to the UI:
-                                        // ui.addBubble(bubble);
-                                    })
-                                }
-                                umkm.push(marker);
-                            })
-                        })
-                    )
-                })
-            } else {
-                return new Promise(function (resolve, reject) {
-                    resolve(
-                        fetch(`/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}&kecamatan=${kecamatan}`)
-                        .then((res) => res.json())
-                        .then(function (data) {
-                            data.forEach(function (value, index) {
-                                let marker = new H.map.Marker({
-                                    lat: value.latitude,
-                                    lng: value.longitude
-                                });
-                                if(window.action == "browse"){
-                                    marker.addEventListener('tap', function (event) {
-                                        toggleModal()
-                                        
-                                        document.getElementById("name").value = value.name
-                                        document.getElementById("address").value = value.address
-                                        document.getElementById("description").value = value.description
-                                        document.getElementById("kecamatan_name").value = value.kecamatan_name
-                                        document.getElementById("jenis_umkm").value = value.jenis_umkm_name
-                                        document.getElementById("pemilik").value = value.user_name
-                                        // document.getElementById("photo").value = value.
-                                        document.getElementById("photo").src = `${window.baseurl}/photo/${value.photo}`
-                                        document.getElementById("lat").value = value.latitude
-                                        document.getElementById("lng").value = value.longitude
-
-                                        const overlay = document.querySelector('.modal-overlay')
-                                        overlay.addEventListener('click', toggleModal)
-    
-                                        var closemodal = document.querySelectorAll('.modal-close')
-                                        for (var i = 0; i < closemodal.length; i++) {
-                                            closemodal[i].addEventListener('click', toggleModal)
-                                          }
-    
-                                        document.onkeydown = function (evt) {
-                                            evt = evt || window.event
-                                            var isEscape = false
-                                            if ("key" in evt) {
-                                                isEscape = (evt.key === "Escape" || evt.key === "Esc")
-                                            } else {
-                                                isEscape = (evt.keyCode === 27)
-                                            }
-                                            if (isEscape && document.body.classList.contains('modal-active')) {
-                                                toggleModal()
-                                            }
-                                        };
-    
-                                        function toggleModal() {
-                                            const body = document.querySelector('body')
-                                            const modal = document.querySelector('.modal')
-                                            modal.classList.toggle('opacity-0')
-                                            modal.classList.toggle('pointer-events-none')
-                                            body.classList.toggle('modal-active')
-                                        }
-                                        // toggleModal('modal-id')
-                                        // var bubble = new H.ui.InfoBubble({
-                                        //     lat: value.latitude,
-                                        //     lng: value.longitude
-                                        // }, {
-                                        //     content: '<div><a href="">' + value.name + ' </a></div>' +
-                                        //         '<div style="font-size:12px">' + value.description + '<br />Jarak: ' + (Math.round((value.distance + Number.EPSILON) * 100) / 100) + ' KM</div>'
-                                        // });
-                                        // // Add info bubble to the UI:
-                                        // ui.addBubble(bubble);
-                                    })
-                                }
-                                umkm.push(marker);
-                            })
-                        })
-                    )
-                })
+            if(!kecamatan){
+                urlFetchUMKM = `/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}`
+            }else{
+                urlFetchUMKM = `/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}&kecamatan=${kecamatan}`
             }
+            return new Promise(function (resolve, reject) {
+                resolve(
+                    fetch(urlFetchUMKM)
+                    .then((res) => res.json())
+                    .then(function (data) {
+                        data.forEach(function (value, index) {
+                            let marker = new H.map.Marker({
+                                lat: value.latitude,
+                                lng: value.longitude
+                            });
+                            if (window.action == "browse") {
+                                marker.addEventListener('dbltap', function (event) {
+                                    toggleModal()
+
+                                    document.getElementById("name").value = value.name
+                                    document.getElementById("address").value = value.address
+                                    document.getElementById("description").value = value.description
+                                    document.getElementById("kecamatan_name").value = value.kecamatan_name
+                                    document.getElementById("jenis_umkm").value = value.jenis_umkm_name
+                                    document.getElementById("pemilik").value = value.user_name
+                                    // document.getElementById("photo").value = value.
+                                    document.getElementById("photo").src = `${window.baseurl}/photo/${value.photo}`
+                                    document.getElementById("lat").value = value.latitude
+                                    document.getElementById("lng").value = value.longitude
+
+                                    const overlay = document.querySelector('.modal-overlay')
+                                    overlay.addEventListener('click', toggleModal)
+
+                                    var closemodal = document.querySelectorAll('.modal-close')
+                                    for (var i = 0; i < closemodal.length; i++) {
+                                        closemodal[i].addEventListener('click', toggleModal)
+                                    }
+
+                                    document.onkeydown = function (evt) {
+                                        evt = evt || window.event
+                                        var isEscape = false
+                                        if ("key" in evt) {
+                                            isEscape = (evt.key === "Escape" || evt.key === "Esc")
+                                        } else {
+                                            isEscape = (evt.keyCode === 27)
+                                        }
+                                        if (isEscape && document.body.classList.contains('modal-active')) {
+                                            toggleModal()
+                                        }
+                                    };
+
+                                    function toggleModal() {
+                                        const body = document.querySelector('body')
+                                        const modal = document.querySelector('.modal')
+                                        modal.classList.toggle('opacity-0')
+                                        modal.classList.toggle('pointer-events-none')
+                                        body.classList.toggle('modal-active')
+                                    }
+                                })
+                                marker.addEventListener("tap", function (event) {
+                                    console.log("TAP!")
+                                    let router = platform.getRoutingService(),
+                                        routeRequestParam = {
+                                            mode: 'fastest;car',
+                                            representation: 'display',
+                                            routeattributes: 'summary',
+                                            maneuverattributes: 'direction,action',
+                                            waypoint0: `${objLocalCoord.lat},${objLocalCoord.lng}`,
+                                            waypoint1: `${value.latitude},${value.longitude}`
+                                        }
+                                    router.calculateRoute(
+                                        routeRequestParam,
+                                        onSuccess,
+                                        onError
+                                    )
+                                    
+                                })
+                            }
+                            umkm.push(marker);
+                        })
+                    })
+                )
+            })
+
 
         }
 
@@ -322,7 +263,6 @@ if (navigator.geolocation) {
 
         function onSuccess(result) {
             route = result.response.route[0];
-
             addRouteShapeToMap(route);
             addSummaryToPanel(route.summary);
         }
@@ -420,12 +360,10 @@ if (navigator.geolocation) {
 
         if (window.action == "direction") {
             calculateRouteAtoB(platform);
-
-            Number.prototype.toMMSS = function () {
-                return Math.floor(this / 60) + ' minutes ' + (this % 60) + ' seconds.';
-            }
         }
-
+        Number.prototype.toMMSS = function () {
+            return Math.floor(this / 60) + ' minutes ' + (this % 60) + ' seconds.';
+        }
 
     })
     // Open url direction

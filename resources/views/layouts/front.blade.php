@@ -273,7 +273,6 @@
         <div class="bg-gray-100">
             <div class="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
                 <div class="max-w-6xl mx-auto">
-
                     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                         <div class="px-4 py-5 sm:px-6">
                             <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -298,6 +297,21 @@
                         </div>
                     </div>
 
+                </div>
+            </div>
+        </div>
+        <div class="bg-gray-100">
+            <div class="max-w-7xl mx-auto py-4 sm:px-3 lg:px-3">
+                <div class="max-w-6xl mx-auto">
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                        <div class="px-4 py-5 sm:px-6">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                Summary
+                            </h3>
+                            <div class="mt-1 max-w-2xl text-sm text-gray-500" id="summary">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
