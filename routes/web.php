@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\JenisUmkmController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\UmkmController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\User\UmkmController as UserUmkmController;
 use App\Models\Kecamatan;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     Route::get('/umkm/list', [UmkmController::class, 'list'])->name('umkm.list');
     Route::resource('umkm', UmkmController::class);
+
+    Route::get('/user/list', [UserController::class, 'list'])->name('user.list');
+    Route::resource('user', UserController::class);
 });
 
 Route::prefix('user')->name('user.')->middleware(['auth'])->group(function () {

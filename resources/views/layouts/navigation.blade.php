@@ -27,6 +27,9 @@
                         <x-nav-link :href="route('admin.umkm.index')" :active="request()->routeIs('admin.umkm.*')">
                             {{ __('UMKM') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.user.index')" :active="request()->routeIs('admin.user.*')">
+                            {{ __('User') }}
+                        </x-nav-link>
                     @else
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
@@ -105,6 +108,9 @@
                 <x-responsive-nav-link :href="route('admin.umkm.index')" :active="request()->routeIs('admin.umkm.*')">
                     {{ __('UMKM') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.user.index')" :active="request()->routeIs('admin.user.*')">
+                    {{ __('User') }}
+                </x-responsive-nav-link>
             @else
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
@@ -127,11 +133,11 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
+                    <a href="route('logout')" onclick="event.preventDefault();
                                         this.closest('form').submit();"
-                        class="text-white bg-red-600 hover:bg-red-700 focus:ring-red-500">
+                        class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium  hover:border-red-700 focus:outline-none focus:bg-red-700 focus:border-red-700 transition duration-150 ease-in-out text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 rounded-md mx-3 ">
                         {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    </a>
                 </form>
             </div>
         </div>

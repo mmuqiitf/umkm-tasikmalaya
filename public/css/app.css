@@ -435,6 +435,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.mx-auto {
   margin-left: auto;
   margin-right: auto;
+}.mx-3 {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
 }.ml-3 {
   margin-left: 0.75rem;
 }.-ml-px {
@@ -1007,6 +1010,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
 }.hover\:border-gray-300:hover {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}.hover\:border-red-700:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(185 28 28 / var(--tw-border-opacity));
 }.hover\:bg-blue-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(29 78 216 / var(--tw-bg-opacity));
@@ -1084,6 +1090,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
 }.focus\:bg-indigo-100:focus {
   --tw-bg-opacity: 1;
   background-color: rgb(224 231 255 / var(--tw-bg-opacity));
+}.focus\:bg-red-700:focus {
+  --tw-bg-opacity: 1;
+  background-color: rgb(185 28 28 / var(--tw-bg-opacity));
 }.focus\:text-gray-700:focus {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity));
