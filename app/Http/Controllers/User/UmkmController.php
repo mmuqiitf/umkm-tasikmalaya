@@ -43,7 +43,6 @@ class UmkmController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $edit_url = route('user.umkm.edit', $row->id);
-                    $edit_url = route('user.umkm.show', $row->id);
                     $action_btn = '
                     <button
                         class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest focus:outline-non disabled:opacity-25 transition ease-in-out duration-150 text-white bg-gray-800 hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 lihat" data-id="' . $row->id . '" data-latitude="' . $row->latitude . '" data-longitude="' . $row->longitude . '">

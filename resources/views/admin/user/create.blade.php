@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h1 class="text-2xl pb-3">Tambah Kecamatan</h1>
+                    <h1 class="text-2xl pb-3">Tambah User</h1>
 
                     <div class="mt-5 md:mt-0 md:col-span-2">
                         <form action="{{ route('admin.user.store') }}" method="POST" enctype="multipart/form-data">

@@ -124,9 +124,9 @@ if (navigator.geolocation) {
         let urlFetchUMKM = '';
         const fetchSpaces = function (latitude, longitude, radius, kecamatan = false) {
             if(!kecamatan){
-                urlFetchUMKM = `/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}`
+                urlFetchUMKM = `${window.baseurl}/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}`
             }else{
-                urlFetchUMKM = `/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}&kecamatan=${kecamatan}`
+                urlFetchUMKM = `${window.baseurl}/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}&kecamatan=${kecamatan}`
             }
             return new Promise(function (resolve, reject) {
                 resolve(
@@ -198,7 +198,7 @@ if (navigator.geolocation) {
                                         onSuccess,
                                         onError
                                     )
-                                    
+
                                 })
                             }
                             umkm.push(marker);

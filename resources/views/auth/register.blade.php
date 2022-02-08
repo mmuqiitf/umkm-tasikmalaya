@@ -1,9 +1,17 @@
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
-            <a href="/">
+            {{-- <a href="/">
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
+            </a> --}}
+            {{-- <a href="/">
+                <img class="h-56 object-cover sm:h-2 md:h-2"
+                    src="{{ asset('logo.jpg') }}"
+                    alt="">
+            </a> --}}
+            <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                REGISTRATION - UMKM KOTA TASIKMALAYA
+            </p>
         </x-slot>
 
         <!-- Validation Errors -->

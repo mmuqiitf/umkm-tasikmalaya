@@ -137,12 +137,12 @@
                                             @error('lat')
                                                 <x-input type="text" name="lat" id="lat" class="mt-1"
                                                     :isValid="false" value="{{ old('lat') ?? $umkm->latitude }}"
-                                                    readonly>
+                                                >
                                                 </x-input>
                                                 <span class="text-sm text-red-700">{{ $message }}</span>
                                             @else
                                                 <x-input type="text" name="lat" id="lat" class="mt-1"
-                                                    value="{{ old('lat') ?? $umkm->latitude }}" readonly>
+                                                    value="{{ old('lat') ?? $umkm->latitude }}">
                                                 </x-input>
                                             @enderror
                                         </div>
@@ -153,12 +153,12 @@
                                             @error('lng')
                                                 <x-input type="text" name="lng" id="lng" class="mt-1"
                                                     :isValid="false" value="{{ old('lng') ?? $umkm->longitude }}"
-                                                    readonly>
+                                                >
                                                 </x-input>
                                                 <span class="text-sm text-red-700">{{ $message }}</span>
                                             @else
                                                 <x-input type="text" name="lng" id="lng" class="mt-1"
-                                                    value="{{ old('lng') ?? $umkm->longitude }}" readonly>
+                                                    value="{{ old('lng') ?? $umkm->longitude }}">
                                                 </x-input>
                                             @enderror
                                         </div>
