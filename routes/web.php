@@ -37,6 +37,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::resource('jenis-umkm', JenisUmkmController::class);
 
     Route::get('/umkm/list', [UmkmController::class, 'list'])->name('umkm.list');
+    Route::put('/umkm/status/{id}', [UmkmController::class, 'updateStatus'])->name('umkm.updateStatus');
     Route::resource('umkm', UmkmController::class);
 
     Route::get('/user/list', [UserController::class, 'list'])->name('user.list');

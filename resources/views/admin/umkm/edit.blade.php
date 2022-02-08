@@ -134,6 +134,33 @@
                                                 @endforeach
                                             </select> --}}
                                         </div>
+                                        @php
+                                            $klasifikasi_umum = ['usaha mikro', 'usaha kecil', 'usaha menengah'];
+                                            $status_umkm = ['umkm sudah berizin usaha', 'umkm belum berizin usaha'];
+                                        @endphp
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="country"
+                                                class="block text-sm font-medium text-gray-700">Klasifikasi
+                                                UMKM</label>
+                                            <x-input input="select" id="klasifikasi_umum" name="klasifikasi_umum">
+                                                @foreach ($klasifikasi_umum as $ku)
+                                                    <option value="{{ $ku }}" @if ($umkm->klasifikasi_umum === $ku) selected @endif>
+                                                        {{ ucwords($ku) }}
+                                                    </option>
+                                                @endforeach
+                                            </x-input>
+                                        </div>
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="country" class="block text-sm font-medium text-gray-700">Status
+                                                Usaha</label>
+                                            <x-input input="select" id="status_umkm" name="status_umkm">
+                                                @foreach ($status_umkm as $su)
+                                                    <option value="{{ $su }}" @if ($umkm->status_umkm === $su) selected @endif>
+                                                        {{ ucwords($su) }}
+                                                    </option>
+                                                @endforeach
+                                            </x-input>
+                                        </div>
 
                                         <div class="col-span-12 sm:col-span-6">
                                             <label for="photo"
@@ -154,8 +181,7 @@
                                             </label>
                                             @error('lat')
                                                 <x-input type="text" name="lat" id="lat" class="mt-1"
-                                                    :isValid="false" value="{{ old('lat') ?? $umkm->latitude }}"
-                                                >
+                                                    :isValid="false" value="{{ old('lat') ?? $umkm->latitude }}">
                                                 </x-input>
                                                 <span class="text-sm text-red-700">{{ $message }}</span>
                                             @else
@@ -170,8 +196,7 @@
                                             </label>
                                             @error('lng')
                                                 <x-input type="text" name="lng" id="lng" class="mt-1"
-                                                    :isValid="false" value="{{ old('lng') ?? $umkm->longitude }}"
-                                                >
+                                                    :isValid="false" value="{{ old('lng') ?? $umkm->longitude }}">
                                                 </x-input>
                                                 <span class="text-sm text-red-700">{{ $message }}</span>
                                             @else

@@ -41,6 +41,23 @@ class UmkmController extends Controller
                 ->addColumn('kecamatan', function ($row) {
                     return $row->kecamatan->name;
                 })
+                ->editColumn('status', function ($row) {
+                    switch ($row->status) {
+                        case 0:
+                            return '<span class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold leading-none text-yellow-100 bg-yellow-600 rounded-full">Menunggu</span>';
+                            break;
+                        case 1:
+                            return '<span class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold leading-none text-green-100 bg-green-600 rounded-full">Valid</span>';
+                            break;
+                        case 2:
+                            return '<span class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">Tidak Valid</span>';
+                            break;
+
+                        default:
+                            # code...
+                            break;
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     $edit_url = route('admin.umkm.edit', $row->id);
                     $action_btn = '
@@ -60,7 +77,7 @@ class UmkmController extends Controller
                     ';
                     return $action_btn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'status'])
                 ->make(true);
         }
     }
@@ -95,6 +112,8 @@ class UmkmController extends Controller
             'jenis_umkm_id' => 'required|numeric',
             'lat' => 'required',
             'lng' => 'required',
+            'klasifikasi_umum' => 'required',
+            'status_umkm' => 'required',
             'photo' => 'required|image|mimes:jpeg,png,jpg|max:5120',
         ]);
         if ($request->hasFile('photo')) {
@@ -113,6 +132,9 @@ class UmkmController extends Controller
                 'jenis_umkm_id' => $request->jenis_umkm_id,
                 'latitude' => $request->lat,
                 'longitude' => $request->lng,
+                'klasifikasi_umum' => $request->klasifikasi_umum,
+                'status_umkm' => $request->status_umkm,
+                'status' => 0,
                 'photo' => $photo_name,
             ]);
             return redirect()->route('admin.umkm.index')->with('success', 'UMKM baru berhasil dibuat!');
@@ -165,6 +187,8 @@ class UmkmController extends Controller
             'jenis_umkm_id' => 'required|numeric',
             'lat' => 'required',
             'lng' => 'required',
+            'klasifikasi_umum' => 'required',
+            'status_umkm' => 'required',
             'photo' => 'sometimes|required|image|mimes:jpeg,png,jpg|max:5120',
         ]);
         $photo_name = $umkm->photo;
@@ -185,9 +209,23 @@ class UmkmController extends Controller
             'jenis_umkm_id' => $request->jenis_umkm_id,
             'latitude' => $request->lat,
             'longitude' => $request->lng,
+            'klasifikasi_umum' => $request->klasifikasi_umum,
+            'status_umkm' => $request->status_umkm,
             'photo' => $photo_name,
         ]);
         return redirect()->route('admin.umkm.index')->with('success', 'UMKM berhasil diubah!');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $this->validate($request, [
+            'status' => 'required',
+        ]);
+        $umkm = Umkm::findOrFail($id);
+        $umkm->update([
+            'status' => $request->status
+        ]);
+        return redirect()->back()->with('success', 'Status UMKM berhasil diubah!');
     }
 
     /**

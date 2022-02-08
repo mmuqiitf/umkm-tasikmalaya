@@ -41,6 +41,8 @@
 </head>
 
 <body class="font-sans antialiased">
+    <div class="m-1 rounded-full text-yellow-100 bg-yellow-600 text-green-100 bg-green-600 text-red-100 bg-red-600">
+    </div>
     <div class="min-h-screen bg-gray-100">
         @include('layouts.navigation')
 

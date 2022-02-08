@@ -33,6 +33,7 @@
                                 <th>Jenis UMKM</th>
                                 <th>Alamat</th>
                                 <th>Kecamatan</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -84,6 +85,10 @@
                         {
                             data: 'kecamatan',
                             name: 'kecamatan'
+                        },
+                        {
+                            data: 'status',
+                            name: 'status'
                         },
                         {
                             data: 'action',

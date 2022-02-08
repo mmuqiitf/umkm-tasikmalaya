@@ -125,6 +125,34 @@
                                             @enderror
                                         </div>
 
+                                        @php
+                                            $klasifikasi_umum = ['usaha mikro', 'usaha kecil', 'usaha menengah'];
+                                            $status_umkm = ['umkm sudah berizin usaha', 'umkm belum berizin usaha'];
+                                        @endphp
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="country"
+                                                class="block text-sm font-medium text-gray-700">Klasifikasi
+                                                UMKM</label>
+                                            <x-input input="select" id="klasifikasi_umum" name="klasifikasi_umum">
+                                                @foreach ($klasifikasi_umum as $ku)
+                                                    <option value="{{ $ku }}" @if (old('klasifikasi_umum') === $ku) selected @endif>
+                                                        {{ ucwords($ku) }}
+                                                    </option>
+                                                @endforeach
+                                            </x-input>
+                                        </div>
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="country" class="block text-sm font-medium text-gray-700">Status
+                                                Usaha</label>
+                                            <x-input input="select" id="status_umkm" name="status_umkm">
+                                                @foreach ($status_umkm as $su)
+                                                    <option value="{{ $su }}" @if (old('status_umkm') === $su) selected @endif>
+                                                        {{ ucwords($su) }}
+                                                    </option>
+                                                @endforeach
+                                            </x-input>
+                                        </div>
+
                                         <div class="col-span-6 sm:col-span-3">
                                             <label for="lat" class="block text-sm font-medium text-gray-700">Latitude
                                             </label>
