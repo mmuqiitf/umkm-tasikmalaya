@@ -108,17 +108,6 @@
                                                 @endforeach
                                             </x-input>
                                         </div>
-
-                                        {{-- <div class="col-span-6 sm:col-span-6">
-                                            <label for="photo"
-                                                class="form-label inline-block mb-2 text-gray-700">Foto</label>
-                                            <input
-                                                class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                                type="file" name="photo" id="photo">
-                                            @error('photo')
-                                                <span class="text-sm text-red-700">{{ $message }}</span>
-                                            @enderror
-                                        </div> --}}
                                         <div class="col-span-6">
                                             <label for="photo"
                                                 class="block text-sm font-medium text-gray-700">Foto</label>
