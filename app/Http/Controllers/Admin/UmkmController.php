@@ -7,6 +7,7 @@ use App\Models\JenisUmkm;
 use App\Models\Kecamatan;
 use App\Models\Umkm;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\File;
@@ -114,16 +115,11 @@ class UmkmController extends Controller
             'lng' => 'required',
             'klasifikasi_umum' => 'required',
             'status_umkm' => 'required',
-            'photo' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+            // 'photo' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+            'photo.*' => 'required|image|mimes:jpeg,png,jpg|max:5120',
         ]);
         if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $photo_name = $photo->getClientOriginalName();
-            $photo_name = preg_replace('!\s+!', ' ', $photo_name);
-            $photo_name = str_replace(' ', '_', $photo_name);
-            $photo_name = str_replace('%', '', $photo_name);
-            $photo->move(public_path('photo'), $photo_name);
-            Umkm::create([
+            $umkm = Umkm::create([
                 'name' => $request->name,
                 'description' => $request->description,
                 'address' => $request->address,
@@ -135,8 +131,23 @@ class UmkmController extends Controller
                 'klasifikasi_umum' => $request->klasifikasi_umum,
                 'status_umkm' => $request->status_umkm,
                 'status' => 0,
-                'photo' => $photo_name,
             ]);
+            $umkmPhotos = [];
+            foreach ($request->file('photo') as $photo) {
+                $photo_name = $photo->getClientOriginalName();
+                $photo_name = preg_replace('!\s+!', ' ', $photo_name);
+                $photo_name = str_replace(' ', '_', $photo_name);
+                $photo_name = str_replace('%', '', $photo_name);
+                $photo->move(public_path('photo'), $photo_name);
+                $umkmPhotos[] = [
+                    'umkm_id' => $umkm->id,
+                    'photo' => $photo_name,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ];
+            }
+
+            $umkm->photos()->insert($umkmPhotos);
             return redirect()->route('admin.umkm.index')->with('success', 'UMKM baru berhasil dibuat!');
         } else {
             return redirect()->route('admin.umkm.index')->with('success', 'Upload Foto terlebih dahulu!');
@@ -189,16 +200,31 @@ class UmkmController extends Controller
             'lng' => 'required',
             'klasifikasi_umum' => 'required',
             'status_umkm' => 'required',
-            'photo' => 'sometimes|required|image|mimes:jpeg,png,jpg|max:5120',
+            'photo.*' => 'sometimes|required|image|mimes:jpeg,png,jpg|max:5120',
         ]);
         $photo_name = $umkm->photo;
         if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $photo_name = $photo->getClientOriginalName();
-            $photo_name = preg_replace('!\s+!', ' ', $photo_name);
-            $photo_name = str_replace(' ', '_', $photo_name);
-            $photo_name = str_replace('%', '', $photo_name);
-            $photo->move(public_path('photo'), $photo_name);
+            foreach ($umkm->photos as $key => $photo) {
+                if (File::exists(public_path("photo\\" . $photo->photo))) {
+                    unlink(public_path("photo\\" . $photo->photo));
+                }
+            }
+            $umkm->photos()->delete();
+
+            foreach ($request->file('photo') as $key => $photo) {
+                $photo_name = $photo->getClientOriginalName();
+                $photo_name = preg_replace('!\s+!', ' ', $photo_name);
+                $photo_name = str_replace(' ', '_', $photo_name);
+                $photo_name = str_replace('%', '', $photo_name);
+                $photo->move(public_path('photo'), $photo_name);
+                $umkmPhotos[] = [
+                    'umkm_id' => $umkm->id,
+                    'photo' => $photo_name,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ];
+            }
+            $umkm->photos()->insert($umkmPhotos);
         }
         $umkm->update([
             'name' => $request->name,
@@ -211,7 +237,6 @@ class UmkmController extends Controller
             'longitude' => $request->lng,
             'klasifikasi_umum' => $request->klasifikasi_umum,
             'status_umkm' => $request->status_umkm,
-            'photo' => $photo_name,
         ]);
         return redirect()->route('admin.umkm.index')->with('success', 'UMKM berhasil diubah!');
     }
@@ -236,10 +261,12 @@ class UmkmController extends Controller
      */
     public function destroy(Umkm $umkm)
     {
-        $path_file = public_path('photo/' . $umkm->photo);
-        if (File::exists($path_file)) {
-            unlink($path_file);
+        foreach ($umkm->photos as $key => $photo) {
+            if (File::exists(public_path("photo\\" . $photo->photo))) {
+                unlink(public_path("photo\\" . $photo->photo));
+            }
         }
+        $umkm->photos()->delete();
         $umkm->delete();
         return response()->json(['status' => TRUE]);
     }

@@ -134,6 +134,41 @@
                                                 @endforeach
                                             </select> --}}
                                         </div>
+                                        <div class="col-span-6">
+                                            <label for="photo"
+                                                class="block text-sm font-medium text-gray-700">Foto</label>
+                                            <div class="increment">
+                                                <div class="mt-1 relative rounded-md shadow-sm input-group">
+                                                    <input type="file" name="photo[]" id="photo"
+                                                        class=" w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                                        placeholder="0.00">
+                                                    <div class="absolute inset-y-0 right-0 flex items-center">
+                                                        <x-buttons type="button"
+                                                            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 btn-add">
+                                                            +</x-buttons>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @if ($errors->has('photo'))
+                                                <ul class="text-red-500">
+                                                    @foreach ($errors->get('photo') as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                            <div class="clone invisible">
+                                                <div class="mt-1 relative rounded-md shadow-sm input-group">
+                                                    <input type="file" name="photo[]" id="photo"
+                                                        class=" w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                                        placeholder="0.00">
+                                                    <div class="absolute inset-y-0 right-0 flex items-center">
+                                                        <x-buttons type="button"
+                                                            class="text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 btn-remove">
+                                                            -</x-buttons>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         @php
                                             $klasifikasi_umum = ['usaha mikro', 'usaha kecil', 'usaha menengah'];
                                             $status_umkm = ['umkm sudah berizin usaha', 'umkm belum berizin usaha'];
@@ -160,20 +195,6 @@
                                                     </option>
                                                 @endforeach
                                             </x-input>
-                                        </div>
-
-                                        <div class="col-span-12 sm:col-span-6">
-                                            <label for="photo"
-                                                class="form-label inline-block mb-2 text-gray-700">Foto</label>
-                                            <input
-                                                class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                                type="file" name="photo" id="photo">
-                                            @error('photo')
-                                                <span class="text-sm text-red-700">{{ $message }}</span>
-                                            @enderror
-                                            <x-buttons href="{{ asset('photo/' . $umkm->photo) }}"
-                                                class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 mt-3">
-                                                Lihat Foto</x-buttons>
                                         </div>
 
                                         <div class="col-span-6 sm:col-span-3">
@@ -212,6 +233,21 @@
                                             <div style="height: 500px; width: 100% !important;" id="mapContainer"></div>
                                         </div>
                                     </div>
+
+                                    <div class="mt-5">
+                                        <label for="">Galeri Foto</label>
+                                        <div class="grid grid-cols-3 gap-5 mt-5">
+
+                                            @foreach ($umkm->photos as $key => $photo)
+                                                <div>
+                                                    <img src="{{ asset('photo/' . $photo->photo) }}"
+                                                        class="object-cover mx-auto" alt="Foto ke-{{ $key }}">
+
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                                     <x-buttons type="submit"
@@ -228,6 +264,16 @@
     @push('scripts')
         <script>
             window.action = "submit"
+            $(document).ready(function() {
+                $(".btn-add").click(function() {
+                    let markup = $(".invisible").html();
+                    $(".increment").append(markup);
+                    console.log("test", markup)
+                });
+                $("body").on("click", ".btn-remove", function() {
+                    $(this).parents(".input-group").remove();
+                })
+            })
         </script>
     @endpush
 </x-app-layout>
