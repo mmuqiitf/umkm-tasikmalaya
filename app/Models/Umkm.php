@@ -13,6 +13,7 @@ class Umkm extends Model
 
     protected $guarded = [];
     protected $table = 'umkm';
+    protected $with = ['photos'];
 
     public function user()
     {

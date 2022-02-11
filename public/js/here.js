@@ -1,13 +1,13 @@
 if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
+    navigator.geolocation.getCurrentPosition((position) => {
         localCoord = position.coords;
         objLocalCoord = {
             lat: localCoord.latitude,
-            lng: localCoord.longitude
-        }
+            lng: localCoord.longitude,
+        };
 
         let platform = new H.service.Platform({
-            'apikey': window.hereApiKey
+            apikey: window.hereApiKey,
         });
 
         // Obtain the default map types from the platform object
@@ -15,29 +15,35 @@ if (navigator.geolocation) {
 
         // Instantiate (and display) a map object:
         let map = new H.Map(
-            document.getElementById('mapContainer'),
-            defaultLayers.vector.normal.map, {
+            document.getElementById("mapContainer"),
+            defaultLayers.vector.normal.map,
+            {
                 zoom: 13,
                 center: objLocalCoord,
-                pixelRatio: window.devicePixelRatio || 1
-            });
-        window.addEventListener('resize', () => map.getViewPort().resize());
+                pixelRatio: window.devicePixelRatio || 1,
+            }
+        );
+        window.addEventListener("resize", () => map.getViewPort().resize());
 
         let group = new H.map.Group();
 
         map.addObject(group);
 
         // add 'tap' event listener, that opens info bubble, to the group
-        group.addEventListener('tap', function (evt) {
-            // event target is the marker itself, group is a parent event target
-            // for all objects that it contains
-            let bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
-                // read custom data
-                content: evt.target.getData()
-            });
-            // show info bubble
-            ui.addBubble(bubble);
-        }, false);
+        group.addEventListener(
+            "tap",
+            function (evt) {
+                // event target is the marker itself, group is a parent event target
+                // for all objects that it contains
+                let bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
+                    // read custom data
+                    content: evt.target.getData(),
+                });
+                // show info bubble
+                ui.addBubble(bubble);
+            },
+            false
+        );
 
         let ui = H.ui.UI.createDefault(map, defaultLayers);
         let mapEvents = new H.mapevents.MapEvents(map);
@@ -52,19 +58,19 @@ if (navigator.geolocation) {
 
         // Draggable Marker Function
         function addDragableMarker(map, behavior) {
-            let inputLat = document.getElementById('lat');
-            let inputLng = document.getElementById('lng');
+            let inputLat = document.getElementById("lat");
+            let inputLng = document.getElementById("lng");
 
-            if (inputLat.value != '' && inputLng.value != '') {
+            if (inputLat.value != "" && inputLng.value != "") {
                 objLocalCoord = {
                     lat: inputLat.value,
-                    lng: inputLng.value
-                }
+                    lng: inputLng.value,
+                };
             }
 
             let marker = new H.map.Marker(objLocalCoord, {
-                volatility: true
-            })
+                volatility: true,
+            });
 
             marker.draggable = true;
             map.addObject(marker);
@@ -72,47 +78,63 @@ if (navigator.geolocation) {
             // disable the default draggability of the underlying map
             // and calculate the offset between mouse and target's position
             // when starting to drag a marker object:
-            map.addEventListener('dragstart', function (ev) {
-                let target = ev.target,
-                    pointer = ev.currentPointer;
-                if (target instanceof H.map.Marker) {
-                    let targetPosition = map.geoToScreen(target.getGeometry());
-                    target['offset'] = new H.math.Point(
-                        pointer.viewportX - targetPosition.x, pointer.viewportY - targetPosition.y
-                    );
-                    behavior.disable();
-                }
-            }, false);
+            map.addEventListener(
+                "dragstart",
+                function (ev) {
+                    let target = ev.target,
+                        pointer = ev.currentPointer;
+                    if (target instanceof H.map.Marker) {
+                        let targetPosition = map.geoToScreen(
+                            target.getGeometry()
+                        );
+                        target["offset"] = new H.math.Point(
+                            pointer.viewportX - targetPosition.x,
+                            pointer.viewportY - targetPosition.y
+                        );
+                        behavior.disable();
+                    }
+                },
+                false
+            );
 
             // Listen to the drag event and move the position of the marker
             // as necessary
-            map.addEventListener('drag', function (ev) {
-                let target = ev.target,
-                    pointer = ev.currentPointer;
-                if (target instanceof H.map.Marker) {
-                    target.setGeometry(
-                        map.screenToGeo(
-                            pointer.viewportX - target['offset'].x, pointer.viewportY - target['offset'].y
-                        )
-                    );
-                }
-            }, false);
+            map.addEventListener(
+                "drag",
+                function (ev) {
+                    let target = ev.target,
+                        pointer = ev.currentPointer;
+                    if (target instanceof H.map.Marker) {
+                        target.setGeometry(
+                            map.screenToGeo(
+                                pointer.viewportX - target["offset"].x,
+                                pointer.viewportY - target["offset"].y
+                            )
+                        );
+                    }
+                },
+                false
+            );
 
             // re-enable the default draggability of the underlying map
             // when dragging has completed
-            map.addEventListener('dragend', function (ev) {
-                let target = ev.target;
-                if (target instanceof H.map.Marker) {
-                    behavior.enable();
-                    let resultCoord = map.screenToGeo(
-                        ev.currentPointer.viewportX,
-                        ev.currentPointer.viewportY
-                    );
-                    // console.log(resultCoord)
-                    inputLat.value = resultCoord.lat.toFixed(5);
-                    inputLng.value = resultCoord.lng.toFixed(5);
-                }
-            }, false);
+            map.addEventListener(
+                "dragend",
+                function (ev) {
+                    let target = ev.target;
+                    if (target instanceof H.map.Marker) {
+                        behavior.enable();
+                        let resultCoord = map.screenToGeo(
+                            ev.currentPointer.viewportX,
+                            ev.currentPointer.viewportY
+                        );
+                        // console.log(resultCoord)
+                        inputLat.value = resultCoord.lat.toFixed(5);
+                        inputLng.value = resultCoord.lng.toFixed(5);
+                    }
+                },
+                false
+            );
         }
 
         if (window.action == "submit") {
@@ -121,94 +143,200 @@ if (navigator.geolocation) {
 
         // Browse location codespace
         let umkm = [];
-        let urlFetchUMKM = '';
-        const fetchSpaces = function (latitude, longitude, radius, kecamatan = false) {
-            if(!kecamatan){
-                urlFetchUMKM = `${window.baseurl}/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}`
-            }else{
-                urlFetchUMKM = `${window.baseurl}/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}&kecamatan=${kecamatan}`
+        let urlFetchUMKM = "";
+        const fetchSpaces = function (
+            latitude,
+            longitude,
+            radius,
+            kecamatan = false
+        ) {
+            if (!kecamatan) {
+                urlFetchUMKM = `${window.baseurl}/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}`;
+            } else {
+                urlFetchUMKM = `${window.baseurl}/api/umkm?lat=${latitude}&lng=${longitude}&rad=${radius}&kecamatan=${kecamatan}`;
             }
             return new Promise(function (resolve, reject) {
                 resolve(
                     fetch(urlFetchUMKM)
-                    .then((res) => res.json())
-                    .then(function (data) {
-                        data.forEach(function (value, index) {
-                            let marker = new H.map.Marker({
-                                lat: value.latitude,
-                                lng: value.longitude
+                        .then((res) => res.json())
+                        .then(function (data) {
+                            data.forEach(function (value, index) {
+                                let marker = new H.map.Marker({
+                                    lat: value.latitude,
+                                    lng: value.longitude,
+                                });
+                                if (window.action == "browse") {
+                                    marker.addEventListener(
+                                        "dbltap",
+                                        function (event) {
+                                            toggleModal();
+
+                                            document.getElementById(
+                                                "name"
+                                            ).value = value.name;
+                                            document.getElementById(
+                                                "address"
+                                            ).value = value.address;
+                                            document.getElementById(
+                                                "description"
+                                            ).value = value.description;
+                                            document.getElementById(
+                                                "kecamatan_name"
+                                            ).value = value.kecamatan_name;
+                                            document.getElementById(
+                                                "jenis_umkm"
+                                            ).value = value.jenis_umkm_name;
+                                            document.getElementById(
+                                                "pemilik"
+                                            ).value = value.user_name;
+                                            // document.getElementById("photo").value = value.
+                                            document.getElementById(
+                                                "photo"
+                                            ).src = `${window.baseurl}/photo/${value.photo}`;
+                                            document.getElementById(
+                                                "lat"
+                                            ).value = value.latitude;
+                                            document.getElementById(
+                                                "lng"
+                                            ).value = value.longitude;
+
+                                            const overlay =
+                                                document.querySelector(
+                                                    ".modal-overlay"
+                                                );
+                                            overlay.addEventListener(
+                                                "click",
+                                                toggleModal
+                                            );
+
+                                            var closemodal =
+                                                document.querySelectorAll(
+                                                    ".modal-close"
+                                                );
+                                            for (
+                                                var i = 0;
+                                                i < closemodal.length;
+                                                i++
+                                            ) {
+                                                closemodal[i].addEventListener(
+                                                    "click",
+                                                    toggleModal
+                                                );
+                                            }
+
+                                            document.onkeydown = function (
+                                                evt
+                                            ) {
+                                                evt = evt || window.event;
+                                                var isEscape = false;
+                                                if ("key" in evt) {
+                                                    isEscape =
+                                                        evt.key === "Escape" ||
+                                                        evt.key === "Esc";
+                                                } else {
+                                                    isEscape =
+                                                        evt.keyCode === 27;
+                                                }
+                                                if (
+                                                    isEscape &&
+                                                    document.body.classList.contains(
+                                                        "modal-active"
+                                                    )
+                                                ) {
+                                                    toggleModal();
+                                                }
+                                            };
+
+                                            function toggleModal() {
+                                                const body =
+                                                    document.querySelector(
+                                                        "body"
+                                                    );
+                                                const modal =
+                                                    document.querySelector(
+                                                        ".modal"
+                                                    );
+                                                modal.classList.toggle(
+                                                    "opacity-0"
+                                                );
+                                                modal.classList.toggle(
+                                                    "pointer-events-none"
+                                                );
+                                                body.classList.toggle(
+                                                    "modal-active"
+                                                );
+                                            }
+                                        }
+                                    );
+                                    marker.addEventListener(
+                                        "tap",
+                                        function (event) {
+                                            console.log("TAP!");
+                                            let router =
+                                                    platform.getRoutingService(),
+                                                routeRequestParam = {
+                                                    mode: "fastest;car",
+                                                    representation: "display",
+                                                    routeattributes: "summary",
+                                                    maneuverattributes:
+                                                        "direction,action",
+                                                    waypoint0: `${objLocalCoord.lat},${objLocalCoord.lng}`,
+                                                    waypoint1: `${value.latitude},${value.longitude}`,
+                                                };
+                                            router.calculateRoute(
+                                                routeRequestParam,
+                                                onSuccess,
+                                                onError
+                                            );
+                                        }
+                                    );
+                                    var infoBubble = new H.ui.InfoBubble(
+                                        {
+                                            lat: value.latitude,
+                                            lng: value.longitude,
+                                        },
+                                        {
+                                            content:
+                                                `<div><a href="">` +
+                                                value.name +
+                                                ` </a></div>` +
+                                                `<div style="font-size:12px">` +
+                                                value.description +
+                                                `<br />Jarak: ` +
+                                                Math.round(
+                                                    (value.distance +
+                                                        Number.EPSILON) *
+                                                        100
+                                                ) /
+                                                    100 +
+                                                ` KM</div>` +
+                                                `<img src="/photo/${value.photos[0]?.photo}" />`,
+                                        }
+                                    );
+                                    marker.addEventListener(
+                                        "pointermove",
+                                        function (evt) {
+                                            console.log("Value", value);
+                                            if (
+                                                evt.target instanceof
+                                                    H.map.Marker ||
+                                                evt.target instanceof
+                                                    H.map.DomMarker
+                                            ) {
+                                                ui.addBubble(infoBubble);
+                                                infoBubble.open();
+                                            } else {
+                                                infoBubble.close();
+                                            }
+                                        }
+                                    );
+                                }
+                                umkm.push(marker);
                             });
-                            if (window.action == "browse") {
-                                marker.addEventListener('dbltap', function (event) {
-                                    toggleModal()
-
-                                    document.getElementById("name").value = value.name
-                                    document.getElementById("address").value = value.address
-                                    document.getElementById("description").value = value.description
-                                    document.getElementById("kecamatan_name").value = value.kecamatan_name
-                                    document.getElementById("jenis_umkm").value = value.jenis_umkm_name
-                                    document.getElementById("pemilik").value = value.user_name
-                                    // document.getElementById("photo").value = value.
-                                    document.getElementById("photo").src = `${window.baseurl}/photo/${value.photo}`
-                                    document.getElementById("lat").value = value.latitude
-                                    document.getElementById("lng").value = value.longitude
-
-                                    const overlay = document.querySelector('.modal-overlay')
-                                    overlay.addEventListener('click', toggleModal)
-
-                                    var closemodal = document.querySelectorAll('.modal-close')
-                                    for (var i = 0; i < closemodal.length; i++) {
-                                        closemodal[i].addEventListener('click', toggleModal)
-                                    }
-
-                                    document.onkeydown = function (evt) {
-                                        evt = evt || window.event
-                                        var isEscape = false
-                                        if ("key" in evt) {
-                                            isEscape = (evt.key === "Escape" || evt.key === "Esc")
-                                        } else {
-                                            isEscape = (evt.keyCode === 27)
-                                        }
-                                        if (isEscape && document.body.classList.contains('modal-active')) {
-                                            toggleModal()
-                                        }
-                                    };
-
-                                    function toggleModal() {
-                                        const body = document.querySelector('body')
-                                        const modal = document.querySelector('.modal')
-                                        modal.classList.toggle('opacity-0')
-                                        modal.classList.toggle('pointer-events-none')
-                                        body.classList.toggle('modal-active')
-                                    }
-                                })
-                                marker.addEventListener("tap", function (event) {
-                                    console.log("TAP!")
-                                    let router = platform.getRoutingService(),
-                                        routeRequestParam = {
-                                            mode: 'fastest;car',
-                                            representation: 'display',
-                                            routeattributes: 'summary',
-                                            maneuverattributes: 'direction,action',
-                                            waypoint0: `${objLocalCoord.lat},${objLocalCoord.lng}`,
-                                            waypoint1: `${value.latitude},${value.longitude}`
-                                        }
-                                    router.calculateRoute(
-                                        routeRequestParam,
-                                        onSuccess,
-                                        onError
-                                    )
-
-                                })
-                            }
-                            umkm.push(marker);
                         })
-                    })
-                )
-            })
-
-
-        }
+                );
+            });
+        };
 
         function clearSpace() {
             map.removeObjects(umkm);
@@ -217,26 +345,31 @@ if (navigator.geolocation) {
 
         function init(latitude, longitude, radius, kecamatan = false) {
             clearSpace();
-            fetchSpaces(latitude, longitude, radius, kecamatan)
-                .then(function () {
+            fetchSpaces(latitude, longitude, radius, kecamatan).then(
+                function () {
                     map.addObjects(umkm);
-                });
+                }
+            );
         }
 
-        if (window.action == 'browse') {
-            let kecamatan = document.getElementById("kecamatan")
-            kecamatan.addEventListener('change', (e) => {
-                e.preventDefault()
-                var values = e.target.value
+        if (window.action == "browse") {
+            let kecamatan = document.getElementById("kecamatan");
+            kecamatan.addEventListener("change", (e) => {
+                e.preventDefault();
+                var values = e.target.value;
                 init(objLocalCoord.lat, objLocalCoord.lng, 40, values);
-            })
-            map.addEventListener('dragend', function (ev) {
-                let resultCoord = map.screenToGeo(
-                    ev.currentPointer.viewportX,
-                    ev.currentPointer.viewportY
-                );
-                init(resultCoord.lat, resultCoord.lng, 40);
-            }, false);
+            });
+            map.addEventListener(
+                "dragend",
+                function (ev) {
+                    let resultCoord = map.screenToGeo(
+                        ev.currentPointer.viewportX,
+                        ev.currentPointer.viewportY
+                    );
+                    init(resultCoord.lat, resultCoord.lng, 40);
+                },
+                false
+            );
             init(objLocalCoord.lat, objLocalCoord.lng, 40);
         }
 
@@ -246,19 +379,15 @@ if (navigator.geolocation) {
         function calculateRouteAtoB(platform) {
             let router = platform.getRoutingService(),
                 routeRequestParam = {
-                    mode: 'fastest;car',
-                    representation: 'display',
-                    routeattributes: 'summary',
-                    maneuverattributes: 'direction,action',
-                    waypoint0: urlParams.get('from'),
-                    waypoint1: urlParams.get('to')
-                }
+                    mode: "fastest;car",
+                    representation: "display",
+                    routeattributes: "summary",
+                    maneuverattributes: "direction,action",
+                    waypoint0: urlParams.get("from"),
+                    waypoint1: urlParams.get("to"),
+                };
 
-            router.calculateRoute(
-                routeRequestParam,
-                onSuccess,
-                onError
-            )
+            router.calculateRoute(routeRequestParam, onSuccess, onError);
         }
 
         function onSuccess(result) {
@@ -268,17 +397,25 @@ if (navigator.geolocation) {
         }
 
         function onError(error) {
-            alert('Can\'t reach the remote server' + error);
+            alert("Can't reach the remote server" + error);
         }
 
         function addRouteShapeToMap(route) {
             let linestring = new H.geo.LineString(),
                 routeShape = route.shape,
-                startPoint, endPoint,
-                polyline, routeline, svgStartMark, iconStart, startMarker, svgEndMark, iconEnd, endMarker;
+                startPoint,
+                endPoint,
+                polyline,
+                routeline,
+                svgStartMark,
+                iconStart,
+                startMarker,
+                svgEndMark,
+                iconEnd,
+                endMarker;
 
             routeShape.forEach(function (point) {
-                let parts = point.split(',');
+                let parts = point.split(",");
                 linestring.pushLatLngAlt(parts[0], parts[1]);
             });
 
@@ -288,21 +425,21 @@ if (navigator.geolocation) {
             polyline = new H.map.Polyline(linestring, {
                 style: {
                     lineWidth: 5,
-                    strokeColor: 'rgba(0, 128, 255, 0.7)',
-                    lineTailCap: 'arrow-tail',
-                    lineHeadCap: 'arrow-head'
-                }
+                    strokeColor: "rgba(0, 128, 255, 0.7)",
+                    lineTailCap: "arrow-tail",
+                    lineHeadCap: "arrow-head",
+                },
             });
 
             routeline = new H.map.Polyline(linestring, {
                 style: {
                     lineWidth: 5,
-                    fillColor: 'white',
-                    strokeColor: 'rgba(255, 255, 255, 1)',
+                    fillColor: "white",
+                    strokeColor: "rgba(255, 255, 255, 1)",
                     lineDash: [0, 2],
-                    lineTailCap: 'arrow-tail',
-                    lineHeadCap: 'arrow-head'
-                }
+                    lineTailCap: "arrow-tail",
+                    lineHeadCap: "arrow-head",
+                },
             });
 
             svgStartMark = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 52 52" style="enable-background:new 0 0 52 52;" xml:space="preserve" width="512px" height="512px"><g><path d="M38.853,5.324L38.853,5.324c-7.098-7.098-18.607-7.098-25.706,0h0  C6.751,11.72,6.031,23.763,11.459,31L26,52l14.541-21C45.969,23.763,45.249,11.72,38.853,5.324z M26.177,24c-3.314,0-6-2.686-6-6  s2.686-6,6-6s6,2.686,6,6S29.491,24,26.177,24z" data-original="#1081E0" class="active-path" data-old_color="#1081E0" fill="#C12020"/></g> </svg>`;
@@ -310,48 +447,53 @@ if (navigator.geolocation) {
             iconStart = new H.map.Icon(svgStartMark, {
                 size: {
                     h: 45,
-                    w: 45
-                }
+                    w: 45,
+                },
             });
 
-            startMarker = new H.map.Marker({
-                lat: startPoint.latitude,
-                lng: startPoint.longitude
-            }, {
-                icon: iconStart
-            });
+            startMarker = new H.map.Marker(
+                {
+                    lat: startPoint.latitude,
+                    lng: startPoint.longitude,
+                },
+                {
+                    icon: iconStart,
+                }
+            );
 
             svgEndMark = `<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 52 52" style="enable-background:new 0 0 52 52;" xml:space="preserve"> <path style="fill:#1081E0;" d="M38.853,5.324L38.853,5.324c-7.098-7.098-18.607-7.098-25.706,0h0 C6.751,11.72,6.031,23.763,11.459,31L26,52l14.541-21C45.969,23.763,45.249,11.72,38.853,5.324z M26.177,24c-3.314,0-6-2.686-6-6 s2.686-6,6-6s6,2.686,6,6S29.491,24,26.177,24z"/></svg>`;
 
             iconEnd = new H.map.Icon(svgEndMark, {
                 size: {
                     h: 45,
-                    w: 45
+                    w: 45,
+                },
+            });
+
+            endMarker = new H.map.Marker(
+                {
+                    lat: endPoint.latitude,
+                    lng: endPoint.longitude,
+                },
+                {
+                    icon: iconEnd,
                 }
-            });
-
-            endMarker = new H.map.Marker({
-                lat: endPoint.latitude,
-                lng: endPoint.longitude
-            }, {
-                icon: iconEnd
-            });
-
+            );
 
             // Add the polyline to the map
             map.addObjects([polyline, routeline, startMarker, endMarker]);
 
             // And zoom to its bounding rectangle
             map.getViewModel().setLookAtData({
-                bounds: polyline.getBoundingBox()
+                bounds: polyline.getBoundingBox(),
             });
         }
 
         function addSummaryToPanel(summary) {
-            const sumDiv = document.getElementById('summary');
+            const sumDiv = document.getElementById("summary");
             const markup = `
                 <ul>
-                    <li>Total Distance: ${summary.distance/1000}Km</li>
+                    <li>Total Distance: ${summary.distance / 1000}Km</li>
                     <li>Travel Time: ${summary.travelTime.toMMSS()} (in current traffic)</li>
                 </ul>
             `;
@@ -362,13 +504,17 @@ if (navigator.geolocation) {
             calculateRouteAtoB(platform);
         }
         Number.prototype.toMMSS = function () {
-            return Math.floor(this / 60) + ' minutes ' + (this % 60) + ' seconds.';
-        }
-
-    })
+            return (
+                Math.floor(this / 60) + " minutes " + (this % 60) + " seconds."
+            );
+        };
+    });
     // Open url direction
     function openDirection(lat, lng, id, role) {
-        window.open(`${window.baseurl}/${role}/umkm/${id}?from=${objLocalCoord.lat},${objLocalCoord.lng}&to=${lat},${lng}`, "_blank");
+        window.open(
+            `${window.baseurl}/${role}/umkm/${id}?from=${objLocalCoord.lat},${objLocalCoord.lng}&to=${lat},${lng}`,
+            "_blank"
+        );
     }
 } else {
     console.error("Geolocation is not suppported by this browser!");

@@ -27,7 +27,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <style>
         .H_ib_body {
-            width: 200px !important;
+            width: 300px !important;
         }
 
         .modal {
@@ -174,8 +174,7 @@
             </div>
             <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
                 <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-                    src="{{ asset('peta-kota-tasik.png') }}"
-                    alt="">
+                    src="{{ asset('peta-kota-tasik.png') }}" alt="">
             </div>
         </div>
         <!-- This example requires Tailwind CSS v2.0+ -->
@@ -277,7 +276,8 @@
                                 Maps
                             </h3>
                             <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                                Silahkan cari UMKM dari maps berikut. Klik icon hijau 2 kali untuk melihat data UMKM nya.
+                                Silahkan cari UMKM dari maps berikut. Klik icon hijau 2 kali untuk melihat data UMKM
+                                nya.
                             </p>
                         </div>
                         <div>
