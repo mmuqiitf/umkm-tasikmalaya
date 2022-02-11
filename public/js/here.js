@@ -167,108 +167,6 @@ if (navigator.geolocation) {
                                 });
                                 if (window.action == "browse") {
                                     marker.addEventListener(
-                                        "dbltap",
-                                        function (event) {
-                                            toggleModal();
-
-                                            document.getElementById(
-                                                "name"
-                                            ).value = value.name;
-                                            document.getElementById(
-                                                "address"
-                                            ).value = value.address;
-                                            document.getElementById(
-                                                "description"
-                                            ).value = value.description;
-                                            document.getElementById(
-                                                "kecamatan_name"
-                                            ).value = value.kecamatan_name;
-                                            document.getElementById(
-                                                "jenis_umkm"
-                                            ).value = value.jenis_umkm_name;
-                                            document.getElementById(
-                                                "pemilik"
-                                            ).value = value.user_name;
-                                            // document.getElementById("photo").value = value.
-                                            document.getElementById(
-                                                "photo"
-                                            ).src = `${window.baseurl}/photo/${value.photo}`;
-                                            document.getElementById(
-                                                "lat"
-                                            ).value = value.latitude;
-                                            document.getElementById(
-                                                "lng"
-                                            ).value = value.longitude;
-
-                                            const overlay =
-                                                document.querySelector(
-                                                    ".modal-overlay"
-                                                );
-                                            overlay.addEventListener(
-                                                "click",
-                                                toggleModal
-                                            );
-
-                                            var closemodal =
-                                                document.querySelectorAll(
-                                                    ".modal-close"
-                                                );
-                                            for (
-                                                var i = 0;
-                                                i < closemodal.length;
-                                                i++
-                                            ) {
-                                                closemodal[i].addEventListener(
-                                                    "click",
-                                                    toggleModal
-                                                );
-                                            }
-
-                                            document.onkeydown = function (
-                                                evt
-                                            ) {
-                                                evt = evt || window.event;
-                                                var isEscape = false;
-                                                if ("key" in evt) {
-                                                    isEscape =
-                                                        evt.key === "Escape" ||
-                                                        evt.key === "Esc";
-                                                } else {
-                                                    isEscape =
-                                                        evt.keyCode === 27;
-                                                }
-                                                if (
-                                                    isEscape &&
-                                                    document.body.classList.contains(
-                                                        "modal-active"
-                                                    )
-                                                ) {
-                                                    toggleModal();
-                                                }
-                                            };
-
-                                            function toggleModal() {
-                                                const body =
-                                                    document.querySelector(
-                                                        "body"
-                                                    );
-                                                const modal =
-                                                    document.querySelector(
-                                                        ".modal"
-                                                    );
-                                                modal.classList.toggle(
-                                                    "opacity-0"
-                                                );
-                                                modal.classList.toggle(
-                                                    "pointer-events-none"
-                                                );
-                                                body.classList.toggle(
-                                                    "modal-active"
-                                                );
-                                            }
-                                        }
-                                    );
-                                    marker.addEventListener(
                                         "tap",
                                         function (event) {
                                             console.log("TAP!");
@@ -310,13 +208,16 @@ if (navigator.geolocation) {
                                                 ) /
                                                     100 +
                                                 ` KM</div>` +
-                                                `<img src="/photo/${value.photos[0]?.photo}" />`,
+                                                `<img src="/photo/${value.photos[0]?.photo}" />` +
+                                                `<div class="block mt-5 gap-2">
+                                                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest focus:outline-non focus:ring disabled:opacity-25 transition ease-in-out duration-150 text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 detail-map"  data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="${value.id}">Detail</button>
+                                                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest focus:outline-non focus:ring disabled:opacity-25 transition ease-in-out duration-150 text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 direction-map" data-id="${value.id}">Direction</button>
+                                                </div>`,
                                         }
                                     );
                                     marker.addEventListener(
                                         "pointermove",
                                         function (evt) {
-                                            console.log("Value", value);
                                             if (
                                                 evt.target instanceof
                                                     H.map.Marker ||
@@ -327,6 +228,113 @@ if (navigator.geolocation) {
                                                 infoBubble.open();
                                             } else {
                                                 infoBubble.close();
+                                            }
+                                            let buttonDetailMap =
+                                                document.querySelectorAll(
+                                                    ".detail-map"
+                                                );
+                                            let buttonDirectionMap =
+                                                document.querySelectorAll(
+                                                    ".direction-map"
+                                                );
+
+                                            for (
+                                                let index = 0;
+                                                index < buttonDetailMap.length;
+                                                index++
+                                            ) {
+                                                buttonDetailMap[
+                                                    index
+                                                ].addEventListener(
+                                                    "click",
+                                                    function (e) {
+                                                        document.getElementById(
+                                                            "name"
+                                                        ).value = value.name;
+                                                        document.getElementById(
+                                                            "address"
+                                                        ).value = value.address;
+                                                        document.getElementById(
+                                                            "description"
+                                                        ).value =
+                                                            value.description;
+                                                        document.getElementById(
+                                                            "kecamatan_name"
+                                                        ).value =
+                                                            value.kecamatan_name;
+                                                        document.getElementById(
+                                                            "jenis_umkm"
+                                                        ).value =
+                                                            value.jenis_umkm_name;
+                                                        document.getElementById(
+                                                            "pemilik"
+                                                        ).value =
+                                                            value.user_name;
+                                                        let photoHTML = "";
+                                                        if (
+                                                            value.photos
+                                                                .length !== 0
+                                                        ) {
+                                                            value.photos?.forEach(
+                                                                (photo) => {
+                                                                    photoHTML += `<img class="h-auto"
+                                                                src="/photo/${photo.photo}">`;
+                                                                }
+                                                            );
+                                                            document.getElementById(
+                                                                "photo"
+                                                            ).innerHTML = photoHTML;
+                                                        } else {
+                                                            document.getElementById(
+                                                                "photo"
+                                                            ).innerHTML = `<img class="h-auto"
+                                                            src="https://media.geeksforgeeks.org/wp-content/uploads/20190807114330/GFG115.png">`;
+                                                        }
+                                                        document.getElementById(
+                                                            "lat"
+                                                        ).value =
+                                                            value.latitude;
+                                                        document.getElementById(
+                                                            "lng"
+                                                        ).value =
+                                                            value.longitude;
+                                                    }
+                                                );
+                                            }
+
+                                            for (
+                                                let index = 0;
+                                                index <
+                                                buttonDirectionMap.length;
+                                                index++
+                                            ) {
+                                                const element =
+                                                    buttonDirectionMap[index];
+                                                element.addEventListener(
+                                                    "click",
+                                                    function (e) {
+                                                        infoBubble.close();
+                                                        let router =
+                                                                platform.getRoutingService(),
+                                                            routeRequestParam =
+                                                                {
+                                                                    mode: "fastest;car",
+                                                                    representation:
+                                                                        "display",
+                                                                    routeattributes:
+                                                                        "summary",
+                                                                    maneuverattributes:
+                                                                        "direction,action",
+                                                                    waypoint0: `${objLocalCoord.lat},${objLocalCoord.lng}`,
+                                                                    waypoint1: `${value.latitude},${value.longitude}`,
+                                                                };
+                                                        router.calculateRoute(
+                                                            routeRequestParam,
+                                                            onSuccess,
+                                                            onError
+                                                        );
+                                                    }
+                                                );
                                             }
                                         }
                                     );
