@@ -208,7 +208,7 @@ if (navigator.geolocation) {
                                                 ) /
                                                     100 +
                                                 ` KM</div>` +
-                                                `<img src="/photo/${value.photos[0]?.photo}" />` +
+                                                `<img src="${window.baseurl}/photo/${value.photos[0]?.photo}" />` +
                                                 `<div class="block mt-5 gap-2">
                                                     <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest focus:outline-non focus:ring disabled:opacity-25 transition ease-in-out duration-150 text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 detail-map"  data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="${value.id}">Detail</button>
                                                     <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest focus:outline-non focus:ring disabled:opacity-25 transition ease-in-out duration-150 text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 direction-map" data-id="${value.id}">Direction</button>
@@ -278,7 +278,7 @@ if (navigator.geolocation) {
                                                             value.photos?.forEach(
                                                                 (photo) => {
                                                                     photoHTML += `<img class="h-auto"
-                                                                src="/photo/${photo.photo}">`;
+                                                                src="${window.baseurl}/photo/${photo.photo}">`;
                                                                 }
                                                             );
                                                             document.getElementById(
